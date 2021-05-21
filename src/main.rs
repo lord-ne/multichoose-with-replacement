@@ -4,7 +4,7 @@ use num_integer;
 use integer_partitions::Partitions;
 
 fn main() {
-    let n : u128 = 79;
+    let n : u128 = 81;
     let k : u128 = 5;
     
     let (num, den) = prob(n, k);
