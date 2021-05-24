@@ -2,19 +2,39 @@ use multiset::HashMultiSet;
 use std::iter::FromIterator;
 use num_integer;
 use integer_partitions::Partitions;
+use streaming_iterator::StreamingIterator;
+
+include!("multi_index.rs"); // Heresy, I know
+use multi_index::MultiIndexSum;
 
 fn main() {
     let n : u128 = 81;
     let k : u128 = 5;
     
+    println!("New version:");
+    let (num2, den2) = prob_v2(n, k);
+    print_prob(num2, den2);
+    println!("");
+    println!("Old version:");
     let (num, den) = prob(n, k);
     print_prob(num, den);
-
     println!("");
-
     let (count, expected) = count_num_perms(n, k);
     print_num_perms(count, expected);
     
+}
+
+fn prob_v2(n : u128, k : u128) -> (u128, u128) {
+    let mut num = 0;
+
+    let mut m_indicies = MultiIndexSum::new(k as u32, n as usize);
+    while let Some(m_index) = m_indicies.next() {
+        num += num_integer::multinomial(m_index).pow(2) as u128;
+    }
+
+    let den : u128 = n.pow(2 * k as u32);
+
+    return (num, den);
 }
 
 // Count total number of permutations, for verification
